@@ -37,7 +37,7 @@ public class FileDownloader {
             Connection connection = Jsoup.connect(urlStr)
                     .header("Referer",urlStr.substring(0,urlStr.indexOf("/", "https://".length())))
                     .userAgent(USER_AGENT)
-                    .timeout(10000).ignoreContentType(true);
+                    .timeout(120000).ignoreContentType(true);
 
             File saveDir = new File(savePath);
             if(!saveDir.exists()){

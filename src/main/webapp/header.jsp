@@ -38,4 +38,4 @@
 </script>
 -->
 
-<script type="text/x-mathjax-config" id="mathJaxConfigSricpt">MathJax.Hub.Config({tex2jax:{inlineMath:[['$','$'],['\\(','\\)']]}});</script>
+<script type="text/x-mathjax-config" id="mathJaxConfigSricpt">MathJax.Hub.Config({tex2jax:{inlineMath:[['$','$'],['\\(','\\)'],['$$$','$$$']],displayMath:[['$$','$$'],["\\[","\\]"],['$$$$$$','$$$$$$']]}});</script>
