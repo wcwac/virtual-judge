@@ -15,9 +15,9 @@ public abstract class CFStyleCrawler extends SimpleCrawler {
         String problemNum = problemId.replaceAll("^\\d*", "");
 
         info.title = Tools.regFind(html, "<div class=\"title\">\\s*" + problemNum + "\\. ([\\s\\S]*?)</div>").trim();
-        Double timeLimit = 1000 * Double.parseDouble(Tools.regFind(html, "</div>([\\d\\.]+) seconds?\\s*</div>"));
+        Double timeLimit = 1000 * Double.parseDouble(Tools.regFind(html, "</div>([\\d\\.]+) (seconds?|s)\\s*</div>"));
         info.timeLimit = timeLimit.intValue();
-        info.memoryLimit = 1024 * Integer.parseInt(Tools.regFind(html, "</div>(\\d+) megabytes\\s*</div>"));
+        info.memoryLimit = 1024 * Integer.parseInt(Tools.regFind(html, "</div>(\\d+) (megabytes|MB)\\s*</div>"));
         info.description = Tools.regFind(html, "standard output\\s*</div></div><div>([\\s\\S]*?)</div><div class=\"input-specification");
         if (StringUtils.isEmpty(info.description)) {
             info.description = "<div>" + Tools.regFind(html, "(<div class=\"input-file\">[\\s\\S]*?)</div><div class=\"input-specification");

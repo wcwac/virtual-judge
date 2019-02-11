@@ -40,11 +40,11 @@ public class CodeForcesGymCrawler extends CFStyleCrawler {
 	@Override
 	protected void populateProblemInfo(RawProblemInfo info, String problemId, String html) throws Exception {
 
-        
+
 		try {
 		    //try to craw html description as same as Codeforeces
 	        super.populateProblemInfo(info, problemId, html);
-		} catch (Exception e) { 
+		} catch (Exception e) {
 		    //Not have html description,try to craw from contest problem list and download PDF
 		    final String problemNum = problemId.replaceAll("^\\d*", "");
 			final String contestNum = problemId.replaceAll("\\D.*", "");
@@ -63,8 +63,8 @@ public class CodeForcesGymCrawler extends CFStyleCrawler {
 			taskDescription.submit();
 			String htmlDescription = taskDescription.get();
 
-			String regex = "<a href=\"\\/gym\\/" + contestNum + "\\/problem\\/" + problemNum
-					+ "\"><!--\\s*-->([^<]+)(?:(?:.|\\s)*?<div){2}[^>]*>\\s*([^<]+)<\\/div>\\s*([\\d.]+)\\D*(\\d+)";
+			String regex = "<a href=\"/gym/" + contestNum + "/problem/" + problemNum
+					+ "\"><!--\\s*-->([^<]+)(?:(?:.|\\s)*?<div){2}[^>]*>\\s*([^<]+)</div>\\s*([\\d.]+)\\D*(\\d+)";
 
 			Matcher matcher = Pattern.compile(regex).matcher(htmlDescription);
 			matcher.find();
@@ -76,29 +76,58 @@ public class CodeForcesGymCrawler extends CFStyleCrawler {
 			info.url = contestUrl;
 
 			String io = matcher.group(2);
-			regex = "\\/gym\\/" + contestNum + "\\/attachments\\/download\\S*?\\.pdf";
-
-			matcher = Pattern.compile(regex).matcher(html);
-			matcher.find();
-			
-			String pdfURI;
-			try{
-			    String path = this.getClass().getResource("/").getPath().
-			            replace("WEB-INF/classes/", "ojFiles/cfgym/pdf" +  matcher.group(0).substring(0,matcher.group(0).lastIndexOf("/")));
-	            FileDownloader.downLoadFromUrl(host.toURI() + matcher.group(0),path);
-	            pdfURI =  "../ojFiles/cfgym/pdf" + matcher.group(0);
+			String downloadURL = parseDownloadURL(html, contestNum);
+			if (downloadURL == null) {
+				// can't find downloadURL, perhaps the problemUrl is the downloadURL
+				// for example http://codeforces.com/gym/102055/problem/A is a PDF file
+				downloadURL = getProblemUrl(problemId);
+			}
+			String uri;
+			try {
+				String path = this.getClass().getResource("/").getPath().
+						replace("WEB-INF/classes/", "ojFiles/cfgym" +
+								downloadURL.substring(downloadURL.indexOf("/", "https://".length()), downloadURL.lastIndexOf("/")));
+				FileDownloader.downLoadFromUrl(downloadURL, path);
+				uri = "../ojFiles/cfgym" + downloadURL.substring(downloadURL.indexOf("/", "https://".length()));
 			} catch (Exception e1) {
-			    pdfURI = host.toURI() + matcher.group(0);
-            }
-			info.description = "<strong>Input/Output:<br>" +  io + "</strong>"  + "<br>" +
-			        "<p><a href=\"" + pdfURI + "\">Click here to download the PDF file.</a></p><hr>" +
-                    "<p><embed width=\"100%\" height=\"700\" src=\"" + pdfURI + "\"> </embed></p> ";
+				uri = downloadURL;
+			}
+			info.description = "<strong>Input/Output:<br>" + io + "</strong>" + "<br>" +
+					"<p><a href=\"" + uri + "\">Click here to download the description file.</a></p><hr>" +
+					"<p><embed width=\"100%\" height=\"700\" src=\"" + uri + "\"> </embed></p>";
 			info.input = "";
 			info.output = "";
 			info.sampleInput = "";
 			info.sampleOutput = "";
 		}
 
+	}
+
+	/**
+	 *  parse description file download URL from html
+	 *  first try to get the English version
+	 *  then a file of any type under‘gym/contestNum/attachments/download/’
+	 *  last a PDF file in <a>
+	 */
+	private String parseDownloadURL(String html, String contestNum) {
+		/*
+		<td>
+            English
+        </td>
+        <td>
+                <a href="/gym/100032/attachments/download/41/icl-cup-2012-en.pdf"
+		 */
+		String[] regexes = {
+				"<td>\\s*English\\s*</td>\\s*<td>\\s*<a href=\"(\\S*?/gym/" + contestNum + "/attachments/download/\\S*?)\"",
+				"<a href=\"(\\S*?/gym/" + contestNum + "/attachments/download/\\S*?)\"",
+				"<a href=\"(\\S*?.pdf)\""};
+		for (String regex : regexes) {
+			Matcher matcher = Pattern.compile(regex).matcher(html);
+			if(matcher.find()){
+				return matcher.group(1);
+			}
+		}
+		return null;
 	}
 
 }
