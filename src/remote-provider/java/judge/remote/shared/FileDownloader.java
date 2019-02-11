@@ -37,7 +37,9 @@ public class FileDownloader {
             Connection connection = Jsoup.connect(urlStr)
                     .header("Referer",urlStr.substring(0,urlStr.indexOf("/", "https://".length())))
                     .userAgent(USER_AGENT)
-                    .timeout(120000).ignoreContentType(true);
+                    .timeout(120000)
+                    .maxBodySize(0)
+                    .ignoreContentType(true);
 
             File saveDir = new File(savePath);
             if(!saveDir.exists()){
@@ -58,6 +60,7 @@ public class FileDownloader {
             while(--tryTimesLeft >= 0){
                 try{
                     response = connection.execute();
+                    break;
                 } catch (HttpStatusException e){
                     if(e.getStatusCode() == HttpStatus.SC_NOT_MODIFIED){
                         log.info("Not Modified");
