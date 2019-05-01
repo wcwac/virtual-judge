@@ -90,7 +90,7 @@ public class UVACrawler extends SyncCrawler {
         String descriptionPrefix =
                 "<style type=\"text/css\">h1,h2,h3,h4,h5,h6{margin-bottom:0;}div.textBG p{margin: 0 0 0.0001pt;}</style>" +
                         "<span style='float:right'><a target='_blank' href='" + pdfURL + "'><img width='100' height='26' border='0' title='Download as PDF' alt='Download as PDF' src='../images/button_pdf.png'></a></span><div style='clear:both'></div>";
-        if (htmlInner.contains("http-equiv=\"Refresh\"")) {
+        if (htmlInner.toLowerCase().contains("http-equiv=\"Refresh\"".toLowerCase())) {
             info.description = descriptionPrefix + "<p><embed width=\"100%\" height=\"700\" src=\"" + pdfURL + "\"> </embed></p> ";
         } else {
             info.description = descriptionPrefix + htmlInner;
