@@ -39,6 +39,7 @@ public class FileDownloader {
                     .userAgent(USER_AGENT)
                     .timeout(120000)
                     .maxBodySize(0)
+                    .validateTLSCertificates(false)
                     .ignoreContentType(true);
 
             File saveDir = new File(savePath);
