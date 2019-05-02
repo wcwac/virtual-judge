@@ -34,7 +34,7 @@ public class SPOJCrawler extends SimpleCrawler {
         info.timeLimit = (int) (1000 * Double.parseDouble(Tools.regFind(html, "Time limit:</td><td>([\\s\\S]*?)s")));
         info.memoryLimit = (int) (1024 * Double.parseDouble(Tools.regFind(html, ">Memory limit:</td><td>([\\s\\S]*?)MB")));
         info.description = (Tools.regFind(html, "<div id=\"problem-body\">([\\s\\S]*?)</div><div class=\"text-center\"><a href=\"https://www.spoj.com/submit/"))
-                .replace("<b>Input:</b> ", "<b>Input:</b>\n").replace("<b>Output:</b>", "\n\n<b>Output:</b>").replace("<b>Output:</b> ", "<b>Output:</b>\n");
+                .replace("<strong>Input:</strong> ", "<strong>Input:</strong>\n").replace("<strong>Output:</strong>", "\n\n<strong>Output:</strong>").replace("<strong>Output:</strong> ", "<strong>Output:</strong>\n");
         info.source = (Tools.regFind(html, "<tr><td>Resource:</td><td>([\\s\\S]*?)</td></tr>"));
     }
 
