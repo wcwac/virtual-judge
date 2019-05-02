@@ -73,7 +73,7 @@ public class UVALiveCrawler extends SyncCrawler {
         info.title = Tools.regFind(htmlOuter, "<h3>" + problemId1 + " - (.+?)</h3>").trim();
         info.timeLimit = Integer.parseInt(Tools.regFind(htmlOuter, "Time limit: ([\\d\\.]+)").replaceAll("\\.", ""));
         info.memoryLimit = 0;
-        info.source = Tools.regFind(htmlOuter, "<br />\\s*(.+)<br />\\s*<h3>" + problemId1).trim();
+        info.source = Tools.regFind(htmlOuter, "<br>\\s*(.+)<br>\\s*<h3>" + problemId1).trim();
         info.url = outerUrl;
         
         String pdfURL = "https://icpcarchive.ecs.baylor.edu/external/" + Integer.parseInt(problemId1) / 100 + "/" + problemId1 + ".pdf";

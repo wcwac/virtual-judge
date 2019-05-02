@@ -32,15 +32,15 @@ public class ZOJCrawler extends SimpleCrawler {
         info.timeLimit = (1000 * Integer.parseInt(Tools.regFind(html, "Time Limit: </font> ([\\s\\S]*?) Second")));
         info.memoryLimit = (Integer.parseInt(Tools.regFind(html, "Memory Limit: </font> ([\\s\\S]*?) KB")));
         if (html.contains(">Input<") && html.contains(">Output<") && html.contains(">Sample Input<") && html.contains(">Sample Output<")){
-            info.description = (Tools.regFind(html, "KB[\\s\\S]*?</center><hr />([\\s\\S]*?)>[\\s]*Input"));
+            info.description = (Tools.regFind(html, "KB[\\s\\S]*?</center><hr>([\\s\\S]*?)>[\\s]*Input"));
             info.input = (Tools.regFindCaseSensitive(html, ">[\\s]*Input([\\s\\S]*?)>[\\s]*Out?put"));
             info.output = (Tools.regFindCaseSensitive(html, ">[\\s]*Out?put([\\s\\S]*?)>[\\s]*Sample Input"));
             info.sampleInput = (Tools.regFind(html, ">[\\s]*Sample Input([\\s\\S]*?)>[\\s]*Sample Out?put"));
             info.sampleOutput = (Tools.regFind(html, ">[\\s]*Sample Out?put([\\s\\S]*?)<hr"));
         } else {
-            info.description = (Tools.regFind(html, "KB[\\s\\S]*?</center><hr />([\\s\\S]*?)<hr />"));
+            info.description = (Tools.regFind(html, "KB[\\s\\S]*?</center><hr>([\\s\\S]*?)<hr>"));
         }
-        info.source = (Tools.regFind(html, "Source:\\s*<strong>([\\s\\S]*?)</strong><br />"));
+        info.source = (Tools.regFind(html, "Source:\\s*<strong>([\\s\\S]*?)</strong><br>"));
     }
 
 }

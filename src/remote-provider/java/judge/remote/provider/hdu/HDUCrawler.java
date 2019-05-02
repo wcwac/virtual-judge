@@ -32,12 +32,12 @@ public class HDUCrawler extends SimpleCrawler {
         info.title = Tools.regFind(html, "color:#1A5CC8\">([\\s\\S]*?)</h1>").trim();
         info.timeLimit = (Integer.parseInt(Tools.regFind(html, "(\\d*) MS")));
         info.memoryLimit = (Integer.parseInt(Tools.regFind(html, "/(\\d*) K")));
-        info.description = (Tools.regFind(html, "> Problem Description </div>([\\s\\S]*?)<br /><[^<>]*?panel_title[^<>]*?>"));
-        info.input = (Tools.regFind(html, "> Input </div>([\\s\\S]*?)<br /><[^<>]*?panel_title[^<>]*?>"));
-        info.output = (Tools.regFind(html, "> Output </div>([\\s\\S]*?)<br /><[^<>]*?panel_title[^<>]*?>"));
-        info.sampleInput = (Tools.regFind(html, "> Sample Input </div>([\\s\\S]*?)<br /><[^<>]*?panel_title[^<>]*?>"));
-        info.sampleOutput = (Tools.regFind(html, "> Sample Output </div>([\\s\\S]*?)(<br /><[^<>]*?panel_title[^<>]*?>|<[^<>]*?><[^<>]*?><i>Hint)") + "</div></div>");
-        info.hint = (Tools.regFind(html, "<i>Hint</i></div>([\\s\\S]*?)<br /><[^<>]*?panel_title[^<>]*?>"));
+        info.description = (Tools.regFind(html, "> Problem Description </div>([\\s\\S]*?)<br><[^<>]*?panel_title[^<>]*?>"));
+        info.input = (Tools.regFind(html, "> Input </div>([\\s\\S]*?)<br><[^<>]*?panel_title[^<>]*?>"));
+        info.output = (Tools.regFind(html, "> Output </div>([\\s\\S]*?)<br><[^<>]*?panel_title[^<>]*?>"));
+        info.sampleInput = (Tools.regFind(html, "> Sample Input </div>([\\s\\S]*?)<br><[^<>]*?panel_title[^<>]*?>"));
+        info.sampleOutput = (Tools.regFind(html, "> Sample Output </div>([\\s\\S]*?)(<br><[^<>]*?panel_title[^<>]*?>|<[^<>]*?><[^<>]*?><i>Hint)") + "</div></div>");
+        info.hint = (Tools.regFind(html, "<i>Hint</i></div>([\\s\\S]*?)<br><[^<>]*?panel_title[^<>]*?>"));
         if (!StringUtils.isEmpty(info.hint)){
             info.hint = "<pre>" + info.hint + "</pre>";
         }

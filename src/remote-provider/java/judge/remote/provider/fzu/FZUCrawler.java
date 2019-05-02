@@ -47,9 +47,9 @@ public class FZUCrawler extends SimpleCrawler {
         info.input = (Tools.regFind(html, "Input</h2><div class=\"pro_desc\">([\\s\\S]+?)</div>\\s*<h2><img"));
         info.output = (Tools.regFind(html, "Output</h2><div class=\"pro_desc\">([\\s\\S]+?)</div>\\s*<h2><img"));
         info.sampleInput = (Tools.regFind(html, "Sample Input</h2>([\\s\\S]*?)<h2><img") + "</pre>");
-        info.sampleOutput = (Tools.regFind(html, "Sample Output</h2>([\\s\\S]*?)(<h2><img|</div>\\s*<br />)") + "</pre>");
-        info.hint = (Tools.regFind(html, "Hint</h2>([\\s\\S]+?)(<h2><img|</div>\\s*<br />)"));
-        info.source = (Tools.regFind(html, "Source</h2>([\\s\\S]+?)(<h2><img|</div>\\s*<br />)"));
+        info.sampleOutput = (Tools.regFind(html, "Sample Output</h2>([\\s\\S]*?)(<h2><img|</div>\\s*<br>)") + "</pre>");
+        info.hint = (Tools.regFind(html, "Hint</h2>([\\s\\S]+?)(<h2><img|</div>\\s*<br>)"));
+        info.source = (Tools.regFind(html, "Source</h2>([\\s\\S]+?)(<h2><img|</div>\\s*<br>)"));
     }
 
 }

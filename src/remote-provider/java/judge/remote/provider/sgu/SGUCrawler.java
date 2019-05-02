@@ -37,11 +37,11 @@ public class SGUCrawler extends SimpleCrawler {
         
         info.title = Tools.regFind(html, problemId + "\\.([\\s\\S]*?)</[th]", 1).trim();
         if (html.contains("<title> SSU Online Contester")) {
-            info.description = (Tools.regFind(html, "output: standard </div><br />([\\s\\S]*?)<br /><br /><div align=\"left\" style=\"margin-top:1em;\"><b>Input</b>"));
-            info.input = (Tools.regFind(html, "<b>Input</b></div>([\\s\\S]*?)<br /><br /><div align=\"left\" style=\"margin-top:1em;\"><b>Output</b>"));
-            info.output = (Tools.regFind(html, "<b>Output</b></div>([\\s\\S]*?)<br /><br /><div align=\"left\" style=\"margin-top:1em;\"><b>Example\\(s\\)</b>"));
-            info.sampleInput = (Tools.regFind(html, "<b>Example\\(s\\)</b></div>([\\s\\S]*?)<br /><br />(<div align=\"left\" style=\"margin-top:1em;\"><b>Note</b>|</div><hr />)"));
-            info.hint = (Tools.regFind(html, "<b>Note</b></div>([\\s\\S]*?)<br /><br /></div><hr />"));
+            info.description = (Tools.regFind(html, "output: standard </div><br>([\\s\\S]*?)<br><br><div align=\"left\" style=\"margin-top:1em;\"><b>Input</b>"));
+            info.input = (Tools.regFind(html, "<b>Input</b></div>([\\s\\S]*?)<br><br><div align=\"left\" style=\"margin-top:1em;\"><b>Output</b>"));
+            info.output = (Tools.regFind(html, "<b>Output</b></div>([\\s\\S]*?)<br><br><div align=\"left\" style=\"margin-top:1em;\"><b>Example\\(s\\)</b>"));
+            info.sampleInput = (Tools.regFind(html, "<b>Example\\(s\\)</b></div>([\\s\\S]*?)<br><br>(<div align=\"left\" style=\"margin-top:1em;\"><b>Note</b>|</div><hr>)"));
+            info.hint = (Tools.regFind(html, "<b>Note</b></div>([\\s\\S]*?)<br><br></div><hr>"));
         } else if (html.contains("<title>Saratov State University")) {
             info.description = (Tools.regFind(html, "output:\\s*standard[\\s\\S]*?</div><br><br><br>([\\s\\S]*?)<div align = left><br><b>Input</b>"));
             info.input = (Tools.regFind(html, "<b>Input</b></div>([\\s\\S]*?)<div align = left><br><b>Output</b>"));
