@@ -1,21 +1,20 @@
 package judge.remote.provider.sgu;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import judge.httpclient.DedicatedHttpClient;
 import judge.httpclient.SimpleHttpResponse;
 import judge.httpclient.SimpleNameValueEntityFactory;
 import judge.remote.RemoteOjInfo;
 import judge.remote.account.RemoteAccount;
-import judge.remote.submitter.CanonicalSubmitter;
+import judge.remote.shared.codeforces.CFStyleSubmitter;
+import judge.remote.shared.codeforces.CodeForcesTokenUtil;
 import judge.remote.submitter.SubmissionInfo;
-
 import org.apache.http.HttpEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
-public class SGUSubmitter extends CanonicalSubmitter {
+public class SGUSubmitter extends CFStyleSubmitter {
 
     @Override
     public RemoteOjInfo getOjInfo() {
@@ -23,36 +22,39 @@ public class SGUSubmitter extends CanonicalSubmitter {
     }
 
     @Override
-    protected boolean needLogin() {
-        return false;
+    protected String[] getProblemInfo(String remoteProblemId) {
+        return new String[]{"acmsguru", remoteProblemId};
     }
 
     @Override
-    protected Integer getMaxRunId(SubmissionInfo info, DedicatedHttpClient client, boolean submitted) {
-        String html = client.get("/status.php?id=" + info.remoteAccountId).getBody();
-        Matcher matcher = Pattern.compile("<TD>(\\d{7,})</TD>(?:[\\s\\S](?!TR))*" + info.remoteProblemId).matcher(html);
-        return matcher.find() ? Integer.parseInt(matcher.group(1)) : -1;
+    protected boolean isSameProblem(String[] problemInfo, Map<String, Object> problem) {
+        return problemInfo[0].equals(problem.get("problemsetName")) &&
+                problemInfo[1].equals(problem.get("index"));
     }
 
     @Override
     protected String submitCode(SubmissionInfo info, RemoteAccount remoteAccount, DedicatedHttpClient client) {
+        CodeForcesTokenUtil.CodeForcesToken token = CodeForcesTokenUtil.getTokens(client);
+
         HttpEntity entity = SimpleNameValueEntityFactory.create( //
-            "elang", info.remotelanguage, //
-            "id", remoteAccount.getAccountId(), //
-            "pass", remoteAccount.getPassword(), //
-            "problem", info.remoteProblemId, //
-            "source", info.sourceCode
+                "csrf_token", token.csrf_token, //
+                "_tta", token._tta, //
+                "action", "submitSolutionFormSubmitted", //
+                "contestId", "99999", //
+                "submittedProblemIndex", info.remoteProblemId, //
+                "programTypeId", info.remotelanguage, //
+                "source", info.sourceCode + getRandomBlankString(), //
+                "sourceFile", "", //
+                "sourceCodeConfirmed", "true", //
+                "doNotShowWarningAgain", "on" //
         );
 
-        SimpleHttpResponse response = client.post("/sendfile.php?contest=0", entity);
-        if (!response.getBody().contains("successfully submitted")) {
-            if (response.getBody().contains("Your source seems to be dangerous")) {
-                return "Dangerous Code Error";
-            }
-            throw new RuntimeException();
-        }
+        SimpleHttpResponse response = client.post(
+                "/problemsets/acmsguru/submit?csrf_token=" + token.csrf_token,
+                entity
+        );
 
-        return null;
+        return checkSubmitResult(response);
     }
 
 }

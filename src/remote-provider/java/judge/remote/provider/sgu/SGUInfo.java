@@ -10,11 +10,12 @@ public class SGUInfo {
     public static final RemoteOjInfo INFO = new RemoteOjInfo( //
             RemoteOj.SGU, //
             "SGU", //
-            new HttpHost("acm.sgu.ru") //
+            new HttpHost("codeforces.com") //
     );
     
     static {
         INFO.faviconUrl = "images/remote_oj/SGU_favicon.ico";
         INFO._64IntIoFormat = "%I64d & %I64u";
+        INFO.urlForIndexDisplay = "http://codeforces.com/problemsets/acmsguru";
     }
 }

@@ -21,9 +21,10 @@ Comparing to [the original version](https://github.com/chaoshxxu/virtual-judge/t
 ## How to deploy
 
 - Click [here](https://github.com/chaoshxxu/virtual-judge/wiki/How-to-deploy-your-own-Virtual-Judge) to visit the official wiki page and follow the instructions.  
-  If you are unable to access it, you can click [here](https://github.com/hnshhslsh/virtual-judge-files/tree/master/original)  
-  Notice that since this version of virtual-judge add support for more OJs, you can add OJs called `CFGym`, `Tyvj`, `XTUOJ2` and `VJudge` in `remote_accounts.json` like [this](https://github.com/hnshhslsh/virtual-judge-files/blob/master/modified/remote_accounts.json) to provide accounts for them.  
-  Please delete the useless proxies in the `http_client.json` file and **modify the `user_agent` field to remove the word `robot`** to avoid being blocked by Codeforces, like [this](https://github.com/hnshhslsh/virtual-judge-files/blob/master/modified/http_client.json)
+  - If you are unable to access it, you can click [here](https://github.com/hnshhslsh/virtual-judge-files/tree/master/original)  
+  - Notice that since this version of virtual-judge add support for more OJs, you can add OJs called `CFGym`, `Tyvj`, `XTUOJ2` and `VJudge` in `remote_accounts.json` like [this](https://github.com/hnshhslsh/virtual-judge-files/blob/master/modified/remote_accounts.json) to provide accounts for them.  
+  - As SGU has moved to be a part of Codeforces, **please fill in `SGU` with your Codeforces accounts**  
+  - Please delete the useless proxies in the `http_client.json` file and **modify the `user_agent` field to remove the word `robot`** to avoid being blocked by Codeforces, like [this](https://github.com/hnshhslsh/virtual-judge-files/blob/master/modified/http_client.json)
 - Or click [here](https://www.myblog.link/2017/01/09/VJudge-On-Windows-X64/) to visit the unofficial rapid deployment guide for Windows x64 (in Chinese).
 
 ## 修改说明
@@ -41,9 +42,10 @@ Comparing to [the original version](https://github.com/chaoshxxu/virtual-judge/t
 
 - **手动编译源码及配置环境**  
   点击 [这里](https://github.com/chaoshxxu/virtual-judge/wiki/How-to-deploy-your-own-Virtual-Judge) 访问官方wiki页面按照指令进行安装。  
-  如果无法访问，可以点击[这里](https://github.com/hnshhslsh/virtual-judge-files/tree/master/original)  
-  注意因为本版virtual-judge添加了对更多OJ的支持，所以你可以在`remote_accounts.json`文件中添加叫做`CFGym`, `Tyvj`, `XTUOJ2` 以及 `VJudge`的OJ，像[这样](https://github.com/hnshhslsh/virtual-judge-files/blob/master/modified/remote_accounts.json)，来给这些OJ提供账号。  
-  请删除`http_client.json`文件中无用的代理（proxies），并且**修改`user_agent`字段去除`robot`字样**，以免被 Codeforces 拦截，像[这样](https://github.com/hnshhslsh/virtual-judge-files/blob/master/modified/http_client.json)
+  - 如果无法访问，可以点击[这里](https://github.com/hnshhslsh/virtual-judge-files/tree/master/original)  
+  - 注意因为本版virtual-judge添加了对更多OJ的支持，所以你可以在`remote_accounts.json`文件中添加叫做`CFGym`, `Tyvj`, `XTUOJ2` 以及 `VJudge`的OJ，像[这样](https://github.com/hnshhslsh/virtual-judge-files/blob/master/modified/remote_accounts.json)，来给这些OJ提供账号。  
+  - 由于SGU已迁移至Codeforces，**请在`SGU`中填写Codeforces账号**  
+  - 请删除`http_client.json`文件中无用的代理（proxies），并且**修改`user_agent`字段去除`robot`字样**，以免被 Codeforces 拦截，像[这样](https://github.com/hnshhslsh/virtual-judge-files/blob/master/modified/http_client.json)
 
 - **使用已编译的网站及配置好的环境**  
   点击 [这里](https://www.myblog.link/2017/01/09/VJudge-On-Windows-X64/) 访问非官方的Windows x64下的快速部署说明及资源下载。  

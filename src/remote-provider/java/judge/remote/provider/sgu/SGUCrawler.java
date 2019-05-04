@@ -4,8 +4,6 @@ import judge.remote.RemoteOjInfo;
 import judge.remote.crawler.RawProblemInfo;
 import judge.remote.crawler.SimpleCrawler;
 import judge.tool.Tools;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +17,7 @@ public class SGUCrawler extends SimpleCrawler {
 
     @Override
     protected String getProblemUrl(String problemId) {
-        return getHost().toURI() + "/problem.php?contest=0&problem=" + problemId;
+        return getHost().toURI() + "/problemsets/acmsguru/problem/99999/" + problemId;
     }
 
     @Override
@@ -29,30 +27,16 @@ public class SGUCrawler extends SimpleCrawler {
 
     @Override
     protected void populateProblemInfo(RawProblemInfo info, String problemId, String html) {
-        String timeLimitStr = Tools.regFind(html, "ime limit( per test)?: ([\\d\\.]*)", 2);
-        info.timeLimit = (int)(1000 * Double.parseDouble(timeLimitStr));
-        
-        String memoryLimitStr = Tools.regFind(html, "emory limit( per test)?: ([\\d]*)", 2);
-        info.memoryLimit = (int) Double.parseDouble(memoryLimitStr);
-        
-        info.title = Tools.regFind(html, problemId + "\\.([\\s\\S]*?)</[th]", 1).trim();
-        if (html.contains("<title> SSU Online Contester")) {
-            info.description = (Tools.regFind(html, "output: standard </div><br>([\\s\\S]*?)<br><br><div align=\"left\" style=\"margin-top:1em;\"><b>Input</b>"));
-            info.input = (Tools.regFind(html, "<b>Input</b></div>([\\s\\S]*?)<br><br><div align=\"left\" style=\"margin-top:1em;\"><b>Output</b>"));
-            info.output = (Tools.regFind(html, "<b>Output</b></div>([\\s\\S]*?)<br><br><div align=\"left\" style=\"margin-top:1em;\"><b>Example\\(s\\)</b>"));
-            info.sampleInput = (Tools.regFind(html, "<b>Example\\(s\\)</b></div>([\\s\\S]*?)<br><br>(<div align=\"left\" style=\"margin-top:1em;\"><b>Note</b>|</div><hr>)"));
-            info.hint = (Tools.regFind(html, "<b>Note</b></div>([\\s\\S]*?)<br><br></div><hr>"));
-        } else if (html.contains("<title>Saratov State University")) {
-            info.description = (Tools.regFind(html, "output:\\s*standard[\\s\\S]*?</div><br><br><br>([\\s\\S]*?)<div align = left><br><b>Input</b>"));
-            info.input = (Tools.regFind(html, "<b>Input</b></div>([\\s\\S]*?)<div align = left><br><b>Output</b>"));
-            info.input = (Tools.regFind(html, "<b>Output</b></div>([\\s\\S]*?)<div align = left><br><b>Sample test"));
-            info.sampleInput = (Tools.regFind(html, "<b>Sample test\\(s\\)</b></div>([\\s\\S]*?)(<div align = left><br><b>Note</b>|<div align = right>)"));
-            info.hint = (Tools.regFind(html, "<b>Note</b></div>([\\s\\S]*?)<div align = right>"));
+        info.title = Tools.regFind(html, "<h4>" + problemId + "\\. ([\\s\\S]*?)</h4>").trim();
+        if(info.title.isEmpty()){
+            info.title = Tools.regFind(html, "<p align=\"CENTER\">\\s*" + problemId + "\\. ([\\s\\S]*?)</p>").trim();
         }
-        if (StringUtils.isEmpty(info.input) || StringUtils.isEmpty(info.output)) {
-            info.description = (html.replaceAll("(?i)[\\s\\S]*\\d{3,}\\s*KB\\s*</P>", "").replaceAll("(?i)</?(body|html)>", ""));
+        Double timeLimit = 1000 * Double.parseDouble(Tools.regFind(html, "[Tt]ime limit per test:\\s*([\\d\\.]+)\\s*sec"));
+        info.timeLimit = timeLimit.intValue();
+        info.memoryLimit = Integer.parseInt(Tools.regFind(html, "[Mm]emory limit(?: per test)?:\\s(\\d+) (kilobytes|KB)\\s*</"));
+        info.description = Tools.regFind(html, "output: standard(?: output)?\\s*</div>(?:<br>)+([\\s\\S]*?)(<br>)*</div>(<hr>)?</div></div><script type=\"text/javascript\" src=\"\">");
+        if(info.description.isEmpty()){
+            info.description = Tools.regFind(html, "<p align=\"JUSTIFY\">([\\s\\S]*?)</td></tr></tbody></table></div></div><script type=\"text/javascript\" src=\"\">");
         }
-        info.source = (Tools.regFind(html, "Resource:</td><td>([\\s\\S]*?)\n</td>"));
-    }
-
+}
 }

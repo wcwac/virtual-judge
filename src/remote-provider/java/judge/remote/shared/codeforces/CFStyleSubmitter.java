@@ -31,17 +31,14 @@ public abstract class CFStyleSubmitter extends CanonicalSubmitter {
     @Override
     protected Integer getMaxRunId(SubmissionInfo info, DedicatedHttpClient client, boolean submitted) throws IOException {
         String html = client.get("/api/user.status?handle=" + info.remoteAccountId + "&from=1&count=10").getBody();
-        String contestNum = info.remoteProblemId.replaceAll("\\D.*", "");
-        String problemNum = info.remoteProblemId.replaceAll("^\\d*", "");
-        
+        String[] problemInfo = getProblemInfo(info.remoteProblemId);
         try {
             Map<String, Object> json = (Map<String, Object>) JSONUtil.deserialize(html);
             List<Map<String, Object>> results = (List<Map<String, Object>>)json.get("result");
             for (Map<String, Object> result : results) {
                 int runId = ((Long) result.get("id")).intValue();
                 Map<String, Object> problem = (Map<String, Object>) result.get("problem");
-                if(contestNum.equals(((Long)problem.get("contestId")).toString()) &&
-                        problemNum.equals((String)problem.get("index"))){
+                if(isSameProblem(problemInfo, problem)){
                     return runId;
                 }
             }
@@ -50,6 +47,17 @@ public abstract class CFStyleSubmitter extends CanonicalSubmitter {
             return -1;
         }
         return -1;
+    }
+
+    protected String[] getProblemInfo(String remoteProblemId) {
+        return new String[]{
+                remoteProblemId.replaceAll("\\D.*", ""),  //contestId
+                remoteProblemId.replaceAll("^\\d*", "")}; //problemId
+    }
+
+    protected boolean isSameProblem(String[] problemInfo, Map<String, Object> problem) {
+        return problemInfo[0].equals(((Long)problem.get("contestId")).toString()) &&
+                problemInfo[1].equals((String)problem.get("index"));
     }
 
     @Override
@@ -72,7 +80,11 @@ public abstract class CFStyleSubmitter extends CanonicalSubmitter {
             "/problemset/submit?csrf_token=" + token.csrf_token,
             entity
         );
-        
+
+        return checkSubmitResult(response);
+    }
+
+    protected String checkSubmitResult(SimpleHttpResponse response) {
         if (response.getStatusCode() != HttpStatus.SC_MOVED_TEMPORARILY) {
             if (response.getBody().contains("error for__programTypeId")) {
                 return "Language Rejected";
@@ -84,8 +96,8 @@ public abstract class CFStyleSubmitter extends CanonicalSubmitter {
         }
         return null;
     }
-    
-    private String getRandomBlankString() {
+
+    protected String getRandomBlankString() {
         String string = "\n";
         int random = new Random().nextInt(Integer.MAX_VALUE);
         while (random > 0) {

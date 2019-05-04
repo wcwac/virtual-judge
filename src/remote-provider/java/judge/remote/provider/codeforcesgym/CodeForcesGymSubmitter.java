@@ -1,12 +1,11 @@
 package judge.remote.provider.codeforcesgym;
 
+import judge.remote.RemoteOjInfo;
+import judge.remote.shared.codeforces.CFStyleSubmitter;
 import org.springframework.stereotype.Component;
 
-import judge.remote.RemoteOjInfo;
-import judge.remote.shared.codeforces.CFStyleQuerier;
-
 @Component
-public class CodeForcesGymSubmitter extends CFStyleQuerier {
+public class CodeForcesGymSubmitter extends CFStyleSubmitter {
 
     @Override
     public RemoteOjInfo getOjInfo() {
