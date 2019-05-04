@@ -2,14 +2,19 @@ package judge.remote.provider.aizu;
 
 import judge.httpclient.DedicatedHttpClient;
 import judge.httpclient.HttpBodyValidator;
-import judge.httpclient.HttpStatusValidator;
-import judge.httpclient.SimpleNameValueEntityFactory;
 import judge.remote.RemoteOjInfo;
 import judge.remote.account.RemoteAccount;
 import judge.remote.loginer.RetentiveLoginer;
-
-import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.struts2.json.JSONException;
+import org.apache.struts2.json.JSONUtil;
 import org.springframework.stereotype.Component;
+
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class AizuLoginer extends RetentiveLoginer {
@@ -22,19 +27,22 @@ public class AizuLoginer extends RetentiveLoginer {
 
     @Override
     protected void loginEnforce(RemoteAccount account, DedicatedHttpClient client) {
-        if (client.get("/onlinejudge/index.jsp").getBody().contains("href=\"logout.jsp\"")) {
+        String idString = "{\"id\":\"" + account.getAccountId() + "\"";
+        if (client.get("https://judgeapi.u-aizu.ac.jp/self").getBody().startsWith(idString)) {
             return;
         }
 
-        HttpEntity entity = SimpleNameValueEntityFactory.create( //
-                "loginUserID", account.getAccountId(), //
-                "loginPassword", account.getPassword(), //
-                "submit", "Sign in");
-        client.post(
-                "/onlinejudge/index.jsp",
-                entity,
-                HttpStatusValidator.SC_OK,
-                new HttpBodyValidator("href=\"logout.jsp\""));
+        Map<String, String> payload = new HashMap<>();
+        payload.put("id", account.getAccountId());
+        payload.put("password", account.getPassword());
+        HttpPost post = new HttpPost("https://judgeapi.u-aizu.ac.jp/session");
+        try {
+            post.setEntity(new StringEntity(JSONUtil.serialize(payload)));
+            post.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            client.execute(post,  new HttpBodyValidator(idString));
+        } catch (UnsupportedEncodingException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }
