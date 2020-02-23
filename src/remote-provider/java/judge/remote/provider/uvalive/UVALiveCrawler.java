@@ -36,7 +36,7 @@ public class UVALiveCrawler extends SyncCrawler {
         final String problemId2 = helper.getProblemId2(problemId1);
         Validate.isTrue(!StringUtils.isEmpty(problemId2));
 
-        final HttpHost host = new HttpHost("icpcarchive.ecs.baylor.edu", 443, "https");
+        final HttpHost host = new HttpHost("icpcarchive.ecs.baylor.edu", -1, "https");
         final DedicatedHttpClient client = dedicatedHttpClientFactory.build(host);
 
         final String outerUrl = host.toURI() + "/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=" + problemId2;

@@ -18,7 +18,7 @@ public class MarkdownParser {
     private final static Logger log = LoggerFactory.getLogger(MarkdownParser.class);
 
     public static String parse(String markdown) throws UnsupportedEncodingException {
-        DedicatedHttpClient client = SpringBean.getBean(DedicatedHttpClientFactory.class).build(new HttpHost("api.github.com", 443, "https"));
+        DedicatedHttpClient client = SpringBean.getBean(DedicatedHttpClientFactory.class).build(new HttpHost("api.github.com", -1, "https"));
         return client.post("/markdown/raw?access_token=5363ede91b01d1513781a31ffa3976085c73ea91", new StringEntity(markdown, "UTF-8"), new SimpleHttpResponseMapper<String>() {
             @Override
             public String map(SimpleHttpResponse response) throws Exception {

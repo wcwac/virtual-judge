@@ -113,7 +113,7 @@ class UVALiveProblemIdCrawlTask extends CascadeTask<Boolean> {
 
         log.info("> UVA live problem id mapping, category = " + category);
 
-        HttpHost host = new HttpHost("icpcarchive.ecs.baylor.edu", 443, "https");
+        HttpHost host = new HttpHost(UVALiveInfo.INFO.mainHost);
         DedicatedHttpClient client = SpringBean.getBean(DedicatedHttpClientFactory.class).build(host);
         String listPageUrl = "/index.php?option=com_onlinejudge&Itemid=8&limit=1000&limitstart=0&category=" + category;
 

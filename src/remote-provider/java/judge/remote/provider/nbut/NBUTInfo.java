@@ -10,7 +10,7 @@ public class NBUTInfo {
     public static final RemoteOjInfo INFO = new RemoteOjInfo( //
             RemoteOj.NBUT, //
             "NBUT", //
-            new HttpHost("ac.2333.moe", 443, "https") //
+            new HttpHost("ac.2333.moe", -1, "https") //
     );
     
     static {

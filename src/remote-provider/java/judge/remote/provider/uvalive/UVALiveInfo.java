@@ -10,7 +10,7 @@ public class UVALiveInfo {
     public static final RemoteOjInfo INFO = new RemoteOjInfo( //
             RemoteOj.UVALive, //
             "UVALive", //
-            new HttpHost("icpcarchive.ecs.baylor.edu", 443, "https") //
+            new HttpHost("icpcarchive.ecs.baylor.edu", -1, "https") //
     );
     
     static {

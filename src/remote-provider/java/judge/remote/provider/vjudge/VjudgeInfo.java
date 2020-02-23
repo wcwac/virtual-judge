@@ -9,7 +9,7 @@ public class VjudgeInfo {
     public static final RemoteOjInfo INFO = new RemoteOjInfo( //
             RemoteOj.VJudge, //
             "VJudge", //
-            new HttpHost("vjudge.net", 443, "https") //
+            new HttpHost("vjudge.net", -1, "https") //
     );
 
     static {
