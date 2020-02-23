@@ -10,7 +10,7 @@ public class URALInfo {
     public static final RemoteOjInfo INFO = new RemoteOjInfo( //
             RemoteOj.URAL, //
             "URAL", //
-            new HttpHost("acm.timus.ru") //
+            new HttpHost("acm.timus.ru", -1, "https") //
     );
     
     static {

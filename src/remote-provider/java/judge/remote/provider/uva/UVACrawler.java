@@ -38,7 +38,7 @@ public class UVACrawler extends SyncCrawler {
         Validate.isTrue(problemId1.matches("\\d{3,5}"));
 
         final UVaProblemInfo uvaProblemInfo = helper.getProblemInfo(problemId1);
-        final HttpHost host = new HttpHost("uva.onlinejudge.org");
+        final HttpHost host = new HttpHost(UVAInfo.INFO.mainHost);
         final String outerUrl = host.toURI() + "/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=" + uvaProblemInfo.problemId2;
         Task<String> taskOuter = new Task<String>(ExecutorTaskType.GENERAL) {
             @Override
@@ -76,7 +76,7 @@ public class UVACrawler extends SyncCrawler {
         info.source = getSource(uvaProblemInfo);
         info.url = outerUrl;
 
-        String pdfURL = "http://uva.onlinejudge.org/external/" + Integer.parseInt(problemId1) / 100 + "/" + problemId1 + ".pdf";
+        String pdfURL = UVAInfo.INFO.mainHost.toURI() + "/external/" + Integer.parseInt(problemId1) / 100 + "/" + problemId1 + ".pdf";
 
         try{
             String path = this.getClass().getResource("/").getPath().

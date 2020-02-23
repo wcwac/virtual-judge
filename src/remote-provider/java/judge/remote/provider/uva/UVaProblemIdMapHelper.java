@@ -144,7 +144,7 @@ class UVaProblemIdCrawlTask extends CascadeTask<Void> {
 
         log.info("> UVa problem id mapping, category = " + category);
 
-        HttpHost host = new HttpHost("uva.onlinejudge.org");
+        HttpHost host = new HttpHost(UVAInfo.INFO.mainHost);
         DedicatedHttpClient client = SpringBean.getBean(DedicatedHttpClientFactory.class).build(host);
         String listPageUrl = "/index.php?option=com_onlinejudge&Itemid=8&limit=1000&limitstart=0&category=" + category;
         String html = client.get(listPageUrl, HttpStatusValidator.SC_OK).getBody();
