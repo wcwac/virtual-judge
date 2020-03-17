@@ -2,6 +2,7 @@ package judge.remote.shared;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,63 +33,59 @@ public class FileDownloader {
 
     public static void downLoadFromUrl(String urlStr,String savePath,String fileName) throws Exception{
         log.info(urlStr);
-        FileOutputStream fos = null;
-        try {
-            Connection connection = Jsoup.connect(urlStr)
-                    .header("Referer",urlStr.substring(0,urlStr.indexOf("/", "https://".length())))
-                    .userAgent(USER_AGENT)
-                    .timeout(120000)
-                    .maxBodySize(0)
-                    .validateTLSCertificates(false)
-                    .ignoreContentType(true);
+        Connection connection = Jsoup.connect(urlStr)
+                .header("Referer",urlStr.substring(0,urlStr.indexOf("/", "https://".length())))
+                .userAgent(USER_AGENT)
+                .timeout(120000)
+                .maxBodySize(0)
+                .validateTLSCertificates(false)
+                .ignoreContentType(true);
 
-            File saveDir = new File(savePath);
-            if(!saveDir.exists()){
-                saveDir.mkdirs();
-            }
-            File file = new File(saveDir+File.separator+fileName);
-            if(file.exists()){
-                Date lastModified = new Date(file.lastModified());
-                log.info("already downloaded at " + lastModified.toString());
-                if((new Date()).getTime() - lastModified.getTime() <  NOT_REDOWNLOAD_IN){
+        File saveDir = new File(savePath);
+        if(!saveDir.exists() && !saveDir.mkdirs()){
+            throw new IOException("Cannot create  " + savePath);
+        }
+        File file = new File(saveDir+File.separator+fileName);
+        if(file.exists()){
+            Date lastModified = new Date(file.lastModified());
+            log.info("already downloaded at " + lastModified.toString());
+            if(file.length() != 0){
+                if((new Date()).getTime() - lastModified.getTime() <  NOT_REDOWNLOAD_IN) {
                     log.info("ignore");
-                    return ;
+                    return;
                 }
                 connection.header("If-Modified-Since", dateFormat.format(lastModified));
             }
-            int tryTimesLeft = TRY_TIMES;
-            Response response = null;
-            while(--tryTimesLeft >= 0){
-                try{
-                    response = connection.execute();
-                    break;
-                } catch (HttpStatusException e){
-                    if(e.getStatusCode() == HttpStatus.SC_NOT_MODIFIED){
-                        log.info("Not Modified");
+        }
+        int tryTimesLeft = TRY_TIMES;
+        while(--tryTimesLeft >= 0){
+            try{
+                Response response = connection.execute();
+                if (response.statusCode() == HttpStatus.SC_NOT_MODIFIED){
+                    log.info("Not Modified");
+                    return ;
+                } else if(response.bodyAsBytes().length == 0){
+                    log.error("response is empty");
+                } else {
+                    try(FileOutputStream fos = new FileOutputStream(file)) {
+                        fos.write(response.bodyAsBytes());
+                        log.info("download success : " + savePath + "/" + fileName);
+                        return;
+                    }
+                }
+            } catch (SocketTimeoutException e){
+                log.error(e.getMessage());
+                if(tryTimesLeft == 0){
+                    if(file.exists()){
+                        log.info("failed, use the local file");
                         return ;
                     } else {
                         throw e;
                     }
-                } catch (SocketTimeoutException e){
-                    log.error(e.getMessage());
-                    if(tryTimesLeft == 0){
-                        if(file.exists()){
-                            log.info("failed, use the local file");
-                            return ;
-                        } else {
-                            throw e;
-                        }
-                    }
                 }
             }
-            fos = new FileOutputStream(file);
-            fos.write(response.bodyAsBytes());
-            log.info("download success : " + savePath + "/" + fileName);
-        } finally {
-            if(fos!=null){
-                fos.close();
-            }
         }
+        throw new IOException("download failed after tried " + TRY_TIMES + " time(s)");
     }
 
 
