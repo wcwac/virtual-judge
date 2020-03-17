@@ -1,5 +1,9 @@
 package judge.action;
 
+import java.io.File;
+import java.io.FileReader;
+import java.lang.reflect.Type;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import judge.remote.RemoteOj;
 import judge.remote.RemoteOjInfo;
 import judge.remote.provider.acdream.ACdreamInfo;
 import judge.remote.provider.aizu.AizuInfo;
@@ -37,9 +44,12 @@ import judge.service.IBaseService;
 import judge.service.JudgeService;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.http.HttpHost;
 import org.apache.struts2.interceptor.ParameterAware;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 用于公共用途
@@ -92,6 +102,28 @@ public class BaseAction extends ActionSupport implements ParameterAware {
         
         for (RemoteOjInfo oj : OJList) {
             OJListLiteral.add(oj.toString());
+        }
+
+        loadOjHostsFromConfigFile(OJList);
+    }
+
+    private static void loadOjHostsFromConfigFile(List<RemoteOjInfo> ojList) {
+        Logger log = LoggerFactory.getLogger(BaseAction.class);
+        try{
+            URI ojHostsConfig = Thread.currentThread().getContextClassLoader().getResource("../oj_hosts.json").toURI();
+            Type type = new TypeToken<HashMap<RemoteOj, String>>(){}.getType();
+            HashMap<RemoteOj, String> map = new Gson().fromJson(new FileReader(new File(ojHostsConfig)), type);
+            for (RemoteOjInfo ojInfo : ojList) {
+                if(map.containsKey(ojInfo.remoteOj)){
+                    String host = map.get(ojInfo.remoteOj);
+                    if(host != null && host.length() != 0){
+                        ojInfo.mainHost = HttpHost.create(host);
+                        log.info("The host of " + ojInfo.remoteOj + " is changed to " +  host);
+                    }
+                }
+            }
+        } catch (Exception e){
+            log.warn("Load oj_hosts.json failed, use all the hosts in XXXInfo.java");
         }
     }
 

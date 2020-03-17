@@ -1,0 +1,31 @@
+// This config file is used to change the hosts of Ojs without change the Java codes
+// Host in this file will override XXXInfo.INFO.mainHost
+// For example:
+// SPOJ : "https://www.spoj.com",
+// -->
+// SPOJInfo.INFO.mainHost = HttpHost.create("https://www.spoj.com");
+{
+  ACdream : "",
+  Aizu : "",
+  CFGym : "",
+  CSU : "",
+  CodeForces : "",
+  FZU : "",
+  HDU : "",
+  HUST : "",
+  HYSBZ : "",
+  LightOJ : "",
+  NBUT : "",
+  POJ : "",
+  SCU : "",
+  SGU : "",
+  SPOJ : "",
+  Tyvj : "",
+  UESTC : "",
+  URAL : "",
+  UVA : "",
+  UVALive : "",
+  VJudge : "",
+  XTUOJ2 : "",
+  ZOJ : ""
+}
