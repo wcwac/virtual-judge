@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import judge.remote.RemoteOjInfo;
 import judge.remote.language.LanguageFinder;
+import judge.remote.shared.LanguageUtil;
 import judge.tool.Handler;
 
 import org.springframework.stereotype.Component;
@@ -29,14 +30,8 @@ public class UVALiveLanguageFinder implements LanguageFinder {
 
     @Override
     public LinkedHashMap<String, String> getDefaultLanguages() {
-        LinkedHashMap<String, String> languageList = new LinkedHashMap<String, String>();
-        languageList.put("1", "ANSI C 5.3.0 - GNU C Compiler");
-        languageList.put("2", "JAVA 1.8.0 - OpenJDK Java");
-        languageList.put("3", "C++ 5.3.0 - GNU C++");
-        languageList.put("4", "PASCAL 3.0.0 - Free Pascal Compiler");
-        languageList.put("5", "C++11 5.3.0 - GNU C++ Compiler");
-        languageList.put("6", "PYTH3 3.5.1 - Python 3");
-        return languageList;
+        // move to config file WEB-INF/oj_languages.json
+        return LanguageUtil.getDefaultLanguages(getOjInfo().literal);
     }
 
     @Override

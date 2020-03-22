@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import judge.remote.RemoteOjInfo;
 import judge.remote.language.LanguageFinder;
+import judge.remote.shared.LanguageUtil;
 import judge.tool.Handler;
 
 import org.springframework.stereotype.Component;
@@ -29,15 +30,8 @@ public class POJLanguageFinder implements LanguageFinder {
 
     @Override
     public LinkedHashMap<String, String> getDefaultLanguages() {
-        LinkedHashMap<String, String> languageList = new LinkedHashMap<String, String>();
-        languageList.put("0", "G++");
-        languageList.put("1", "GCC");
-        languageList.put("2", "Java");
-        languageList.put("3", "Pascal");
-        languageList.put("4", "C++");
-        languageList.put("5", "C");
-        languageList.put("6", "Fortran");
-        return languageList;
+        // move to config file WEB-INF/oj_languages.json
+        return LanguageUtil.getDefaultLanguages(getOjInfo().literal);
     }
 
     @Override

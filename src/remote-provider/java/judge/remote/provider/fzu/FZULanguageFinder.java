@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import judge.remote.RemoteOjInfo;
 import judge.remote.language.LanguageFinder;
+import judge.remote.shared.LanguageUtil;
 import judge.tool.Handler;
 
 import org.springframework.stereotype.Component;
@@ -29,14 +30,8 @@ public class FZULanguageFinder implements LanguageFinder {
 
     @Override
     public LinkedHashMap<String, String> getDefaultLanguages() {
-        LinkedHashMap<String, String> languageList = new LinkedHashMap<String, String>();
-        languageList.put("0", "GNU C++");
-        languageList.put("1", "GNU C");
-        languageList.put("2", "Pascal");
-        languageList.put("3", "Java");
-        languageList.put("4", "Visual C++");
-        languageList.put("5", "Visual C");
-        return languageList;
+        // move to config file WEB-INF/oj_languages.json
+        return LanguageUtil.getDefaultLanguages(getOjInfo().literal);
     }
 
     @Override

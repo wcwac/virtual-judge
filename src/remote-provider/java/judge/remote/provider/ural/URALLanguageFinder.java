@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import judge.remote.RemoteOjInfo;
 import judge.remote.language.LanguageFinder;
+import judge.remote.shared.LanguageUtil;
 import judge.tool.Handler;
 
 import org.springframework.stereotype.Component;
@@ -29,24 +30,8 @@ public class URALLanguageFinder implements LanguageFinder {
 
     @Override
     public LinkedHashMap<String, String> getDefaultLanguages() {
-        LinkedHashMap<String, String> languageList = new LinkedHashMap<>();
-        languageList.put("31", "FreePascal 2.6");
-        languageList.put("39", "Visual C 2017");
-        languageList.put("40", "Visual C++ 2017");
-        languageList.put("45", "GCC 7.1");
-        languageList.put("46", "G++ 7.1");
-        languageList.put("47", "Clang++ 4.0.1");
-        languageList.put("32", "Java 1.8");
-        languageList.put("41", "Visual C# 2017");
-        languageList.put("34", "Python 2.7");
-        languageList.put("48", "Python 3.6");
-        languageList.put("14", "Go 1.3");
-        languageList.put("18", "Ruby 1.9");
-        languageList.put("19", "Haskell 7.6");
-        languageList.put("33", "Scala 2.11");
-        languageList.put("49", "Kotlin 1.1.4");
-        languageList.put("55", "Rust 1.25");
-        return languageList;
+        // move to config file WEB-INF/oj_languages.json
+        return LanguageUtil.getDefaultLanguages(getOjInfo().literal);
     }
 
     @Override
